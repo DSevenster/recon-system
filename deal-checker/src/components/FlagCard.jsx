@@ -15,9 +15,25 @@ const statusConfig = {
   },
 }
 
+const CONFIDENCE_CHECK_TYPES = new Set(["Fuzzy match", "Entity resolution"])
+
+function getConfidenceStyle(confidence) {
+  if (confidence >= 0.85) return { barColor: "bg-green-500", label: "high confidence", textColor: "text-green-600" }
+  if (confidence >= 0.6) return { barColor: "bg-amber-400", label: "resolved", textColor: "text-amber-600" }
+  if (confidence >= 0.3) return { barColor: "bg-amber-500", label: "low confidence — review", textColor: "text-amber-700" }
+  return { barColor: "bg-red-500", label: "cannot resolve", textColor: "text-red-600" }
+}
+
 export default function FlagCard({ result, onRaisePAS, raisedPAS }) {
   const config = statusConfig[result.status]
   const isParked = raisedPAS.has(result.id)
+
+  const showConfidence =
+    result.status === "warn" &&
+    CONFIDENCE_CHECK_TYPES.has(result.checkType) &&
+    result.confidence != null
+
+  const confidenceStyle = showConfidence ? getConfidenceStyle(result.confidence) : null
 
   return (
     <div className={`rounded-lg border ${config.border} ${config.bg} p-4`}>
@@ -41,6 +57,30 @@ export default function FlagCard({ result, onRaisePAS, raisedPAS }) {
           </div>
         </div>
       </div>
+
+      {showConfidence && (
+        <>
+          <div className="px-4 pt-3 pb-1">
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-xs text-gray-400">Match confidence</span>
+              <span className={`text-xs font-medium ${confidenceStyle.textColor}`}>
+                {Math.round(result.confidence * 100)}% — {confidenceStyle.label}
+              </span>
+            </div>
+            <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
+              <div
+                className={`h-full rounded-full ${confidenceStyle.barColor} transition-all duration-500`}
+                style={{ width: `${Math.round(result.confidence * 100)}%` }}
+              />
+            </div>
+          </div>
+          {result.worstPair && (
+            <p className="text-xs text-gray-400 italic px-4 pb-2">
+              Lowest pair: &ldquo;{result.worstPair.valueA}&rdquo; vs &ldquo;{result.worstPair.valueB}&rdquo;
+            </p>
+          )}
+        </>
+      )}
 
       {isParked ? (
         <div className="bg-blue-50 rounded px-3 py-2 text-xs text-blue-600 font-medium mt-3">

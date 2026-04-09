@@ -35,13 +35,17 @@ function similarity(a, b) {
  * @returns {object} CheckResult
  */
 export function fuzzyMatch(sources, fieldName, options = {}) {
-  // Compare every pair and take the minimum similarity
+  // Compute pairwise similarities for all combinations
   let minSim = 1
   let minPair = [sources[0], sources[0]]
+  let totalSim = 0
+  let pairCount = 0
 
   for (let i = 0; i < sources.length; i++) {
     for (let j = i + 1; j < sources.length; j++) {
       const sim = similarity(sources[i].value, sources[j].value)
+      totalSim += sim
+      pairCount++
       if (sim < minSim) {
         minSim = sim
         minPair = [sources[i], sources[j]]
@@ -49,12 +53,23 @@ export function fuzzyMatch(sources, fieldName, options = {}) {
     }
   }
 
+  const confidence = pairCount > 0 ? totalSim / pairCount : 1
   const score = Math.round(minSim * 100)
 
   let status
   if (minSim >= 0.5) status = "pass"
   else if (minSim >= 0.3) status = "warn"
   else status = "fail"
+
+  const worstPair = pairCount > 0
+    ? {
+        docA: minPair[0].doc,
+        valueA: String(minPair[0].value),
+        docB: minPair[1].doc,
+        valueB: String(minPair[1].value),
+        score: minSim,
+      }
+    : null
 
   const variants = sources.map(s => `${s.doc}="${s.value}"`).join(", ")
 
@@ -76,6 +91,8 @@ export function fuzzyMatch(sources, fieldName, options = {}) {
     category: options.category || "Customer",
     checkType: "Fuzzy match",
     status,
+    confidence,
+    worstPair,
     sources,
     message,
     pasTemplate,
