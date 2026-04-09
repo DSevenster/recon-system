@@ -1,17 +1,25 @@
 import { useState, useMemo } from 'react'
 import { deals } from './data/index.js'
+import { deal as deal388 } from './data/deals/AF-2026-00388.js'
 import { runChecks } from './engine/runChecks.js'
 import DealSwitcher from './components/DealSwitcher.jsx'
 import DealHeader from './components/DealHeader.jsx'
 import SummaryBar from './components/SummaryBar.jsx'
+import ApproveZone from './components/ApproveZone.jsx'
 import FlagList from './components/FlagList.jsx'
 import PassingChecks from './components/PassingChecks.jsx'
 import PASModal from './components/PASModal.jsx'
+
+const results388 = runChecks(deal388)
+console.log('fails:', results388.filter(r => r.status === 'fail').length)
+console.log('warns:', results388.filter(r => r.status === 'warn').length)
+console.log('passes:', results388.filter(r => r.status === 'pass').length)
 
 function App() {
   const [selectedDealId, setSelectedDealId] = useState("AF-2026-00417")
   const [activePAS, setActivePAS] = useState(null)
   const [raisedPAS, setRaisedPAS] = useState(new Set())
+  const [approvedDeals, setApprovedDeals] = useState(new Set())
 
   const selectedDeal = deals.find(d => d.id === selectedDealId)
   const results = useMemo(() => runChecks(selectedDeal), [selectedDealId])
@@ -26,6 +34,10 @@ function App() {
     setRaisedPAS(prev => new Set([...prev, resultId]))
   }
 
+  function handleApprove() {
+    setApprovedDeals(prev => new Set([...prev, selectedDeal.id]))
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Top bar */}
@@ -37,6 +49,7 @@ function App() {
         <DealSwitcher
           deals={deals}
           selectedDealId={selectedDealId}
+          approvedDeals={approvedDeals}
           onSelect={(id) => setSelectedDealId(id)}
         />
       </div>
@@ -52,23 +65,30 @@ function App() {
         />
         <SummaryBar fails={fails} warns={warns} passes={passes} />
         {overallStatus === "pass" ? (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-5 flex items-center justify-between gap-4">
-            <div>
+          approvedDeals.has(selectedDeal.id) ? (
+            <div className="bg-green-50 border border-green-200 rounded-xl p-5 flex items-center gap-3">
+              <svg
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+                className="w-5 h-5 text-green-600"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                />
+              </svg>
               <div className="text-sm font-medium text-green-800">
-                All {passes.length} checks passed automatically
-              </div>
-              <div className="text-xs text-green-600 mt-0.5">
-                No conflicts found across 9 documents. Ready for payout.
+                Deal {selectedDeal.id} approved. Payment processing initiated.
               </div>
             </div>
-            <button
-              onClick={() => alert(`Deal ${selectedDeal.id} approved. Payment processing initiated.`)}
-              aria-label={`Approve and pay out deal ${selectedDeal.id}`}
-              className="bg-green-600 hover:bg-green-700 text-white text-base font-semibold px-6 py-2.5 rounded-lg shadow-sm cursor-pointer"
-            >
-              Approve and pay out
-            </button>
-          </div>
+          ) : (
+            <ApproveZone
+              deal={selectedDeal}
+              passCount={passes.length}
+              onApprove={handleApprove}
+            />
+          )
         ) : (
           <FlagList
             fails={fails}
