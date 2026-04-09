@@ -1,9 +1,5 @@
 import { useState } from 'react'
 
-const MANUAL_CHECK_MINUTES = 12
-const DAILY_DEAL_VOLUME = 80
-const AUTO_PASS_RATE = 0.95
-const DAILY_HOURS_SAVED = ((DAILY_DEAL_VOLUME * AUTO_PASS_RATE * MANUAL_CHECK_MINUTES) / 60).toFixed(1)
 
 export default function ApproveZone({ deal, passCount, warns = [], totalChecks }) {
   const [approved, setApproved] = useState(false)
@@ -25,8 +21,7 @@ export default function ApproveZone({ deal, passCount, warns = [], totalChecks }
             Deal {deal.id} approved — payment processing initiated
           </p>
           <p className="text-xs text-green-600 mt-1">
-            {MANUAL_CHECK_MINUTES} minutes of manual checking eliminated.
-            This deal required no human input.
+            All checks passed automatically. No human input required.
           </p>
         </div>
       </div>
@@ -70,22 +65,6 @@ export default function ApproveZone({ deal, passCount, warns = [], totalChecks }
         <div className="flex-1 bg-white border border-green-100 rounded-lg p-3">
           <p className="text-xl font-medium text-green-700">0</p>
           <p className="text-xs text-green-400 mt-0.5">Issues found</p>
-        </div>
-      </div>
-
-      {/* Time saved highlight */}
-      <div className="flex items-baseline gap-3 bg-white border border-green-100 rounded-lg px-4 py-3 mt-3">
-        <span className="text-2xl font-medium text-green-700">
-          {MANUAL_CHECK_MINUTES} min
-        </span>
-        <div>
-          <span className="text-sm text-green-600">
-            manual check time saved on this deal
-          </span>
-          <span className="block text-xs text-green-400 mt-0.5">
-            ~{DAILY_HOURS_SAVED} hrs/day saved across {DAILY_DEAL_VOLUME} deals
-            · {Math.round(AUTO_PASS_RATE * 100)}% require no human input
-          </span>
         </div>
       </div>
     </div>

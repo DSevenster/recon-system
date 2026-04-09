@@ -5,6 +5,7 @@ const statusConfig = {
     badge: "bg-red-100 text-red-700",
     badgeLabel: "Blocker",
     dot: "bg-red-500",
+    btn: "text-red-700 bg-red-50 hover:bg-red-100 border-red-200",
   },
   warn: {
     border: "border-amber-200",
@@ -12,6 +13,7 @@ const statusConfig = {
     badge: "bg-amber-100 text-amber-700",
     badgeLabel: "Warning",
     dot: "bg-amber-500",
+    btn: "text-amber-700 bg-amber-50 hover:bg-amber-100 border-amber-200",
   },
 }
 
@@ -92,7 +94,7 @@ export default function FlagCard({ result, onRaisePAS, raisedPAS }) {
             <button
               onClick={() => onRaisePAS(result)}
               aria-label={`Raise PAS query for ${result.field}`}
-              className="text-xs font-medium text-gray-500 hover:text-gray-900 cursor-pointer"
+              className={`w-full text-xs font-medium border rounded-md px-3 py-2 cursor-pointer transition-colors ${config.btn}`}
             >
               Raise PAS query
             </button>
