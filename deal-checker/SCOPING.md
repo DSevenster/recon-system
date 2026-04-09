@@ -26,5 +26,4 @@ A single-deal reconciliation view, with a second clean deal to demonstrate the a
 - Deal queue with visible triage logic — surfacing the highest-risk deals first based on flag severity and deal value making it clear from a glance what state they're in.
 - Accounts team view with their specific check subset and a hand-off state between teams.
 - PAS response handling — broker replies updating deal state and triggering re-check of affected fields only (not a full re-check from scratch).
-- Confidence scoring on fuzzy matches — showing the algorithm's certainty and letting the user override with a reason.
 - Audit trail — every human decision logged with timestamp and user, feeding into the automation roadmap.
