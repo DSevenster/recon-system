@@ -8,7 +8,7 @@
 //   none
 //
 // KNOWN WARNINGS IN THIS DEAL:
-//   WARN 1 — Vehicle mileage: 8,200 (broker) vs 8,450 (invoice) — 250mi diff, within 2,000 tolerance
+//   none
 
 export const deal = {
 
@@ -89,7 +89,7 @@ export const deal = {
     // Vehicle
     vehicleMake:         "Toyota Yaris GR Sport",
     vehicleReg:          "YD23 KLM",
-    vehicleMileage:      8450,                   // 250mi more than broker estimate — within 2,000 tolerance
+    vehicleMileage:      8200,
 
     // Pricing — extras total 350, under 400 cap
     vehiclePrice:        18500,

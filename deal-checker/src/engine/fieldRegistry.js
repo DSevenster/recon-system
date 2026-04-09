@@ -8,12 +8,14 @@ export const fields = [
 
   { id: "customer-name", field: "Customer name", category: "Customer",
     checkType: "fuzzyMatch",
+    noAction: true,
     sources: ["brokerApplication.customerName", "hpAgreement.customerName",
               "purchaseInvoice.customerName", "paymentMandate.accountHolderName",
               "previousApplication.customerName"] },
 
   { id: "customer-address", field: "Customer address", category: "Customer",
     checkType: "fuzzyMatch",
+    noAction: true,
     sources: ["brokerApplication.address", "hpAgreement.address",
               "purchaseInvoice.customerAddress", "previousApplication.address"] },
 
@@ -47,7 +49,7 @@ export const fields = [
     sources: ["brokerApplication.vehicleYear", "hpAgreement.vehicleYear"] },
 
   { id: "vehicle-mileage", field: "Vehicle mileage", category: "Vehicle",
-    checkType: "numericTolerance", tolerance: 2000,
+    checkType: "numericTolerance", tolerance: 2000, noAction: true,
     sources: ["brokerApplication.vehicleMileage", "purchaseInvoice.vehicleMileage"] },
 
   { id: "hpi-clear", field: "HPI vehicle finance check", category: "Vehicle",

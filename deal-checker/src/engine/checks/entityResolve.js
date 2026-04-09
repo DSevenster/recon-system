@@ -43,13 +43,19 @@ export function entityResolve(sources, resolverSource, fieldName, options = {}) 
   }
 
   const allResolved = unresolved.length === 0
+  const allExactFirmMatches = resolved.length > 0 &&
+    resolved.every(source => normalise(source.value) === firmNorm)
 
-  const status = allResolved ? "warn" : "fail"
+  const status = allResolved
+    ? (allExactFirmMatches ? "pass" : "warn")
+    : "fail"
 
   const chain = sources.map(s => `${s.doc}="${s.value}"`).join(" → ")
 
   const message = allResolved
-    ? `${fieldName} resolved via FCA register: ${chain}. All variants map to "${resolverSource.firmName}".`
+    ? allExactFirmMatches
+      ? `${fieldName} matched FCA register exactly: ${chain}.`
+      : `${fieldName} resolved via FCA register: ${chain}. All variants map to "${resolverSource.firmName}".`
     : `${fieldName} resolution failed: ${unresolved.map(s => `${s.doc}="${s.value}"`).join(", ")} could not be matched to "${resolverSource.firmName}" or trading names [${resolverSource.tradingNames.join(", ")}].`
 
   const pasTemplate = allResolved
