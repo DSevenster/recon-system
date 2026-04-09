@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "deal-checker",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "export PATH=$HOME/.nvm/versions/node/v20.19.0/bin:$PATH && cd deal-checker && npm run dev -- --port 5173"],
+      "port": 5173
+    }
+  ]
+}
