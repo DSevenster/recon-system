@@ -34,7 +34,7 @@ export const deal = {
     vehicleMake:         "Toyota Yaris GR Sport",
     vehicleYear:         2023,
     vehicleReg:          "YD23KLM",
-    vehicleMileage:      8200,
+    vehicleMileage:      8450,
 
     // Financial
     cashPrice:           18500,
