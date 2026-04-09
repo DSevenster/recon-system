@@ -5,7 +5,7 @@ const statusConfig = {
     badge: "bg-red-100 text-red-700",
     badgeLabel: "Blocker",
     dot: "bg-red-500",
-    btn: "text-red-700 bg-red-50 hover:bg-red-100 border-red-200",
+    btn: "text-white bg-red-600 hover:bg-red-700 border-red-600",
   },
   warn: {
     border: "border-amber-200",
@@ -13,7 +13,7 @@ const statusConfig = {
     badge: "bg-amber-100 text-amber-700",
     badgeLabel: "Warning",
     dot: "bg-amber-500",
-    btn: "text-amber-700 bg-amber-50 hover:bg-amber-100 border-amber-200",
+    btn: "text-white bg-amber-500 hover:bg-amber-600 border-amber-500",
   },
 }
 
